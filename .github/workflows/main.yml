@@ -2,21 +2,24 @@ name: OWASP ZAP Full Scan
 
 on:
   workflow_dispatch:
-  # plus on: push if you want auto-trigger
+    inputs:
+      target_url:
+        description: 'The full URL of the site to scan (e.g. https://example.com)'
+        required: true
 
 jobs:
   zap_scan:
     runs-on: ubuntu-latest
-    name: Run ZAP full scan
+    name: Run ZAP Full Scan
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: OWASP ZAP Full Scan
+      - name: Run ZAP Full Scan
         uses: zaproxy/action-full-scan@v0.12.0
         with:
-          target: '${{ inputs.target_url }}'
+          target: ${{ github.event.inputs.target_url }}
           token: ${{ secrets.GITHUB_TOKEN }}
           cmd_options: '-a'
           allow_issue_writing: true
