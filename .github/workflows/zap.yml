@@ -7,10 +7,6 @@ on:
         description: 'The full URL of the site to scan (e.g. https://example.com)'
         required: true
 
-permissions:
-  contents: read
-  issues: write
-
 jobs:
   zap_scan:
     runs-on: ubuntu-latest
@@ -26,5 +22,5 @@ jobs:
           target: ${{ github.event.inputs.target_url }}
           token: ${{ secrets.GITHUB_TOKEN }}
           cmd_options: '-a'
-          allow_issue_writing: true
+          allow_issue_writing: false
           artifact_name: 'zap_scan_results'
