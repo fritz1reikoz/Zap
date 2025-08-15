@@ -1,0 +1,100 @@
+name: OWASP ZAP Scan
+
+
+
+
+
+on:
+
+
+  workflow_dispatch:  # Manual trigger
+
+
+    inputs:
+
+
+      target_url:
+
+
+        description: 'Website to scan'
+
+
+        required: true
+
+
+
+
+
+jobs:
+
+
+  scan:
+
+
+    runs-on: ubuntu-latest
+
+
+    steps:
+
+
+      - name: Checkout Code
+
+
+        uses: actions/checkout@v4
+
+
+
+
+
+      - name: Install ZAP
+
+
+        run: |
+
+
+          sudo apt-get update
+
+
+          sudo apt-get install -y openjdk-17-jdk
+
+
+          wget https://github.com/zaproxy/zap2docker-stable/releases/latest/download/Zap_Latest.jar
+
+
+
+
+
+      - name: Run ZAP Scan
+
+
+        run: |
+
+
+          java -jar Zap_Latest.jar -cmd \
+
+
+            -quickurl "$INPUTS_target_url" \
+
+
+            -report report.html \
+
+
+            -export report.json
+
+
+
+
+
+      - name: Upload Results
+
+
+        uses: actions/upload-artifact@v4
+
+
+        with:
+
+
+          name: scan-results
+
+
+          path: report.html
