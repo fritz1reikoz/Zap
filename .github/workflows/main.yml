@@ -1,0 +1,23 @@
+name: OWASP ZAP Full Scan
+
+on:
+  workflow_dispatch:
+  # plus on: push if you want auto-trigger
+
+jobs:
+  zap_scan:
+    runs-on: ubuntu-latest
+    name: Run ZAP full scan
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: OWASP ZAP Full Scan
+        uses: zaproxy/action-full-scan@v0.12.0
+        with:
+          target: '${{ inputs.target_url }}'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          cmd_options: '-a'
+          allow_issue_writing: true
+          artifact_name: 'zap_scan_results'
