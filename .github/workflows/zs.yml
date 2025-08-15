@@ -1,0 +1,29 @@
+name: ZAP Scanner
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_url:
+        description: 'Website to scan'
+        required: true
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    container: ghcr.io/owasp/zap2docker-stable:latest  # Switched to GHCR
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run ZAP Scan
+        run: |
+          zap.sh -cmd \
+            -quickurl "$INPUTS_target_url" \
+            -report report.html \
+            -export report.json
+
+      - name: Upload Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: scan-results
+          path: report.html
